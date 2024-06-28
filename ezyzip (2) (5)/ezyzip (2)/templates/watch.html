@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Data Watch</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .data-box {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .data-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .data-value {
+        font-size: 24px;
+        color: #333;
+      }
+      .data-timestamp {
+        font-size: 14px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="result-box">
+      <div class="result-title">Today's Result</div>
+      <div class="result-value">₹ 0</div>
+      <div class="result-date">
+        <input type="date" id="calendar-input" />
+      </div>
+    </div>
+
+    <div class="warning">
+      <span class="warning-text">Warning:</span>
+      <span>I posted are for educational purposes only.</span>
+    </div>
+    <div class="tabs">
+      <button class="tab-button active">ALL TRADE</button>
+      <button class="tab-button">FNO INDEX</button>
+      <button class="tab-button">FNO OPTION</button>
+    </div>
+
+    <div id="data-container" class="data-box">
+      <div class="data-title">Market Data</div>
+      <div id="data-content" class="data-value">Fetching data...</div>
+      <div id="data-timestamp" class="data-timestamp"></div>
+    </div>
+
+    <script>
+      // WebSocket connection
+      const websocket = new WebSocket("ws://localhost:8765");
+
+      websocket.onopen = function (event) {
+        console.log("WebSocket connection established");
+      };
+
+      websocket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        console.log("Received data:", data);
+
+        // Update the HTML content with the received data
+        const dataContainer = document.getElementById("data-container");
+        const dataContent = document.getElementById("data-content");
+        const dataTimestamp = document.getElementById("data-timestamp");
+
+        dataContent.textContent = JSON.stringify(data, null, 2); // Display data as formatted JSON
+        dataTimestamp.textContent = new Date().toLocaleString();
+      };
+
+      websocket.onerror = function (error) {
+        console.log("WebSocket error:", error);
+      };
+
+      websocket.onclose = function (event) {
+        console.log("WebSocket connection closed");
+      };
+    </script>
+  </body>
+</html>

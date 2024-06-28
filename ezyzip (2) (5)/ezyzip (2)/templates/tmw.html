@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Base Watchlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .no-records {
+            text-align: center;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1>Time Base Watchlist</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Chart Symbol</th>
+                <th>Terminal Symbol</th>
+                <th>Entry Time</th>
+                <th>Exit Time</th>
+                <th>Qty</th>
+                <th>Q Multiplier</th>
+                <th>Strategy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" id="t11" name="chartSymbol" readonly value="{{ form_data.symbol }}"></td>
+                <td><input type="text" id="t12" name="terminalSymbol" readonly value="{{ form_data.strategy }}"></td>
+                <td><input type="time" id="entryTime" name="entryTime" readonly value="{{ form_data.entryTime }}"></td>
+                <td><input type="time" id="exitTime" name="exitTime" readonly value="{{ form_data.exitTime }}"></td>
+                <td><input type="number" id="qty" name="qty" readonly value="{{ form_data.qty }}"></td>
+                <td><input type="number" id="qMultiplier" name="qMultiplier" readonly value="{{ form_data.qMultiplier }}"></td>
+                <td><input type="text" id="strategy" name="strategy" readonly value="{{ form_data.strategy }}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

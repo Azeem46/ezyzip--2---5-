@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algofox - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 600px; /* Adjusted max-width for better form alignment */
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px; /* Added margin bottom for spacing between rows */
+        }
+        .row label {
+            min-width: 100px; /* Ensure consistent label width for alignment */
+            text-align: right;
+        }
+        .row input[type="text"],
+        .row input[type="time"],
+        .row input[type="number"],
+        .row select {
+            flex: 1; /* Allow form controls to take up remaining space */
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .row input[type="checkbox"]
+        {
+            margin-right: 2px; /* Adjust spacing between checkbox/radio and label */
+        }
+        .row.radio-group {
+          display: flex;
+          align-items: center;
+          gap: 10px; /* Adjust the gap between elements within the row */
+      }
+      
+      .row.radio-group label {
+          margin-right: 0; /* Remove margin between radio buttons and their labels */
+      }
+      
+      .row.radio-group input[type="radio"] {
+          margin-right: 0.5px; /* Adjust spacing between radio and label */
+      }
+        .row.buttons {
+            justify-content:center; /* Align buttons to the right */
+        }
+        .buttons button {
+            padding: 10px 30px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
+   
+      
+    </style>
+    <script>
+        function toggleAll(source) {
+            let checkboxes = document.getElementsByName('days');
+            for (let i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+
+        function toggleDay() {
+            let checkboxes = document.getElementsByName('days');
+            let allChecked = true;
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (!checkboxes[i].checked) {
+                    allChecked = false;
+                    break;
+                }
+            }
+            document.getElementById('all').checked = allChecked;
+        }
+
+        function setCurrentTime() {
+            let now = new Date();
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            let currentTime = `${hours}:${minutes}`;
+
+            document.getElementById('entryTime').value = currentTime;
+            document.getElementById('exitTime').value = currentTime;
+        }
+
+        window.onload = setCurrentTime;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('deleteRow').addEventListener('click', function() {
+                alert('Delete button clicked!');
+            });
+
+            document.getElementById('save').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent form submission for demo purposes
+                const formData = {
+                    action: document.querySelector('input[name="action"]:checked').value,
+                    strategy: document.getElementById('strategy').value,
+                    symbol: document.getElementById('symbol').value,
+                    entryTime: document.getElementById('entryTime').value,
+                    exitTime: document.getElementById('exitTime').value,
+                    repeat: Array.from(document.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value),
+                    signalType: document.querySelector('input[name="signalType"]:checked').value,
+                    type: document.querySelector('input[name="type"]:checked').value,
+                    entryOrder: document.getElementById('entryOrder').value,
+                    exitOrder: document.getElementById('exitOrder').value,
+                    qty: document.getElementById('qty').value,
+                    qMultiplier: document.getElementById('qMultiplier').value,
+                    tPercentage: document.getElementById('tPercentage').value,
+                    slPercentage: document.getElementById('slPercentage').value,
+                    tslPercentage: document.getElementById('tslPercentage').value,
+                };
+                console.log(formData);
+                alert('Save button clicked! Check console for form data.');
+            });
+        });
+    </script>
+</head>
+<body class="dashboard">
+    <div class="container">
+        <form action="{{ url_for('tmw') }}" method="POST">
+            <div class="row">
+                <label>Action:</label>
+                <label style="color: Blue;">Time</label>
+            </div>
+            <div class="row">
+                <label for="strategy">Strategy:</label>
+                <select id="strategy" name="strategy">
+                    <option value="select">Select</option>
+                    <!-- Add other options dynamically if needed -->
+                </select>
+            </div>
+            <div class="row">
+                <label for="symbol">Symbol:</label>
+                <input type="text" id="symbol" name="symbol" value="Terminal Symbol">
+            </div>
+            <div class="row">
+                <label for="entryTime">Entry Time:</label>
+                <input type="time" id="entryTime" name="entryTime">
+                <label for="exitTime">Exit Time:</label>
+                <input type="time" id="exitTime" name="exitTime">
+            </div>
+            <div class="row">
+                <label>Repeat:</label>
+                <input type="checkbox" name="days" id="monday" onclick="toggleDay()">M
+                <input type="checkbox" name="days" id="tuesday" onclick="toggleDay()">T
+                <input type="checkbox" name="days" id="wednesday" onclick="toggleDay()">W
+                <input type="checkbox" name="days" id="thursday" onclick="toggleDay()">T
+                <input type="checkbox" name="days" id="friday" onclick="toggleDay()">F
+                <input type="checkbox" id="all" onclick="toggleAll(this)">All
+            </div>
+            <div class="row">
+                <label>Signal:</label>
+                <input type="radio" id="buy" name="signalType" value="buy" checked>
+                <label for="buy">Buy</label>
+            </div>
+            <div class="row">
+                <label>Type:</label>
+                <input type="radio" id="ce" name="type" value="CE">
+                <label for="ce">CE</label>
+                <input type="radio" id="pe" name="type" value="PE" checked>
+                <label for="pe">PE</label>
+            </div>
+            <div class="row">
+                <label for="entryOrder">Entry Order:</label>
+                <select id="entryOrder" name="entryOrder">
+                    <option value="MARKET">MARKET</option>
+                    <option value="LIMIT">LIMIT</option>
+                </select>
+            </div>
+            <div class="row">
+                <label for="exitOrder">Exit Order:</label>
+                <select id="exitOrder" name="exitOrder">
+                    <option value="MARKET">MARKET</option>
+                    <option value="LIMIT">LIMIT</option>
+                </select>
+            </div>
+            <div class="row">
+                <label for="qty">Qty:</label>
+                <input type="number" id="qty" name="qty" value="1">
+                <label for="qMultiplier">Q Multiplier:</label>
+                <input type="number" id="qMultiplier" name="qMultiplier" value="1">
+            </div>
+            <div class="row">
+                <label for="tPercentage">T%:</label>
+                <input type="number" id="tPercentage" name="tPercentage" value="0">
+                <label for="slPercentage">SL%:</label>
+                <input type="number" id="slPercentage" name="slPercentage" value="0">
+            </div>
+            <div class="row">
+                <label for="tslPercentage">TSL%:</label>
+                <input type="number" id="tslPercentage" name="tslPercentage" value="0">
+            </div>
+            <div class="row buttons">
+                <button type="button" id="save" class="save">Save</button>
+                <button type="button" id="deleteRow" class="delete">Delete</button>
+            </div>
+            <div class="row buttons">
+                <button type="submit" class="buy">BUY</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

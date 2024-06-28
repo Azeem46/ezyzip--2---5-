@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Algofox - Registration</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body class="index">
+    <div class="container">
+      <div class="form-container">
+        <h2>Trading starts here 📊</h2>
+        <p>
+          Make your trading automated with
+          <span class="large-word">intrAlgo</span>
+        </p>
+        <form action="/register" method="post">
+          <input type="text" name="name" placeholder="Enter name" required />
+          <input
+            type="text"
+            name="number"
+            placeholder="Enter mobile"
+            required
+          />
+          <input type="email" name="email" placeholder="Enter email" required />
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter username"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            required
+          />
+
+          <button type="submit">Sign up</button>
+        </form>
+        <p>Already have an account? <a href="/login">Sign in instead</a></p>
+      </div>
+    </div>
+  </body>
+</html>

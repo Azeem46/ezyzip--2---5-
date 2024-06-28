@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>itrAlgo - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .header{
+            background-color: #87CEEB; /* Add your desired background color here */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        
+        .button:hover {
+            background-color: #3e8e41;
+        }
+        
+        .button-block {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+        input[type="text"] {
+            width: 300px; /* Set the width as needed */
+            height: 20px; /* Set the height as needed */
+            padding: 5px; /* Optional: Add padding for better appearance */
+        }
+    </style>
+</head>
+<body class="dashboard">
+    <div class="header">
+        <h1>Welcome to the Dashboard</h1>
+        <label>API Key</label>
+            <input type="text" id="api-key" value="dd6453f7-d102-480e-ab8b-55f0e5d19aab" >
+        <label>API Secret</label>
+            <input type="text" id="api-secret" value="113obmh27n" >
+    </div>
+    <div class="container">
+        <div class="button-container">
+            <a href="/add_edit_scrip" class="button">Signal Base</a>
+            <a href="/time" class="button">Time</a>
+        </div>
+    </div>
+</body>
+</html>

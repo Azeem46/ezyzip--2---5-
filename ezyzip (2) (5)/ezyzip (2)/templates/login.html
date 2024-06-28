@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algofox - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="login">
+    <div class="container">
+        <div class="form-container">
+            <h2>Welcome to intrAlgo!</h2>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <div>
+                    <input type="checkbox" name="remember"> Remember Me
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+            <p>New on our platform? <a href="/register">Create an account</a></p>
+        </div>
+    </div>
+</body>
+</html>

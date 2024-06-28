@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add/Edit Script</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      .save {
+        background-color: blue;
+        color: white;
+      }
+      .autocomplete-suggestions {
+        border: 1px solid #d4d4d4;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+      .autocomplete-suggestion {
+        padding: 10px;
+        cursor: pointer;
+      }
+      .autocomplete-suggestion:hover {
+        background-color: #e9e9e9;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .querySelector(".buy-button")
+          .addEventListener("click", redirectToWatch);
+      });
+
+      function redirectToWatch() {
+        var terminalSymbol = document.getElementById("search").value;
+        var chartSymbol = document.getElementById("chartSymbol").value;
+        var entryOrder = document.getElementById("entryOrder").value;
+        var exitOrder = document.getElementById("exitOrder").value;
+        var lotSize = document.getElementById("lotSizeInput").value;
+        var sl = document.getElementById("sl").value;
+
+        var url =
+          "/watch.html?terminalSymbol=" +
+          encodeURIComponent(terminalSymbol) +
+          "&chartSymbol=" +
+          encodeURIComponent(chartSymbol) +
+          "&entryOrder=" +
+          encodeURIComponent(entryOrder) +
+          "&exitOrder=" +
+          encodeURIComponent(exitOrder) +
+          "&lotSize=" +
+          encodeURIComponent(lotSize) +
+          "&sl=" +
+          encodeURIComponent(sl);
+
+        window.location.href = url;
+      }
+
+      function calculateLotSize() {
+        var qty = document.getElementById("qty").value;
+        var qtyMultiplier = document.getElementById("qtyMultiplier").value;
+        var lotSize = qty * qtyMultiplier;
+        document.getElementById("lotSizeInput").value = lotSize.toFixed(2); // display with 2 decimal places
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("search");
+        const suggestionsContainer = document.getElementById("suggestions");
+
+        let data = [];
+
+        fetch("/static/complete.json")
+          .then((response) => response.json())
+          .then((json) => {
+            data = json.map((item) => item.trading_symbol);
+          })
+          .catch((error) => console.error("Error fetching data:", error));
+
+        searchInput.addEventListener("input", () => {
+          const query = searchInput.value.toLowerCase();
+          if (query.length > 0) {
+            const filteredData = data.filter((symbol) =>
+              symbol.toLowerCase().includes(query)
+            );
+            displaySuggestions(filteredData);
+          } else {
+            clearSuggestions();
+          }
+        });
+
+        function displaySuggestions(suggestions) {
+          suggestionsContainer.innerHTML = "";
+          suggestions.forEach((suggestion) => {
+            const suggestionElement = document.createElement("div");
+            suggestionElement.classList.add("autocomplete-suggestion");
+            suggestionElement.textContent = suggestion;
+            suggestionElement.addEventListener("click", () => {
+              searchInput.value = suggestion;
+              clearSuggestions();
+            });
+            suggestionsContainer.appendChild(suggestionElement);
+          });
+        }
+
+        function clearSuggestions() {
+          suggestionsContainer.innerHTML = "";
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="window.location.href='/dashboard'"
+          >&times;</span
+        >
+        <h2>Add/Edit Script</h2>
+        <form>
+          <div class="radio-group">
+            <label
+              ><input type="radio" name="type" value="buyer" checked />
+              Buyer</label
+            >
+          </div>
+          <div class="form-group">
+            <label for="terminalSymbol">TerminalSymbol</label>
+            <input type="text" id="search" placeholder="Search..." />
+            <div id="suggestions" class="autocomplete-suggestions"></div>
+          </div>
+          <div class="form-group">
+            <label for="chartSymbol">ChartSymbol</label>
+            <input
+              type="text"
+              id="chartSymbol"
+              name="chartSymbol"
+              placeholder="InputSymbol"
+            />
+          </div>
+          <div class="form-group">
+            <label for="qty">Qty</label>
+            <input
+              type="number"
+              id="qty"
+              name="qty"
+              value="0"
+              oninput="calculateLotSize()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="qtyMultiplier">LotSize Multiplier</label>
+            <input
+              type="number"
+              id="qtyMultiplier"
+              name="qtyMultiplier"
+              value="1.0"
+              oninput="calculateLotSize()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="entryOrder">EntryOrder</label>
+            <select id="entryOrder" name="entryOrder">
+              <option id="Limit" value="Limit">Limit</option>
+              <option id="Market" value="Market">Market</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="exitOrder">ExitOrder</label>
+            <select id="exitOrder" name="exitOrder">
+              <option value="Limit">Limit</option>
+              <option value="Market">Market</option>
+            </select>
+          </div>
+          <input type="hidden" id="lotSizeInput" name="lotSize" />
+          <div class="form-group">
+            <label for="stopLoss">SL</label>
+            <input type="number" id="sl" name="sl" />
+          </div>
+          <div class="form-group">
+            <label for="TstopLoss">TSL</label>
+            <input type="number" id="tsl" name="tsl" />
+          </div>
+          <div class="form-group">
+            <label for="ActionValue">Active Value</label>
+            <input type="number" id="al" name="AV" />
+          </div>
+          <div class="form-group">
+            <label for="Range">Range</label>
+            <input type="number" id="r1" name="range" />
+          </div>
+          <div class="button-group">
+            <button
+              type="button"
+              class="close-btn"
+              onclick="window.location.href='/dashboard'"
+            >
+              X
+            </button>
+            <button type="reset">Reset</button>
+            <button type="submit" class="save">Save changes</button>
+            <button type="button" class="buy-button">Buy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
